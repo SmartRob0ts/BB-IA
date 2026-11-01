@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fbfa2b" />
+    <title>BB IA | Meu Perfil</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="conta.css" />
+  </head>
+  <body>
+    <!-- ── HEADER ── -->
+    <header class="site-header">
+      <div class="header-inner">
+        <button class="hamburger" type="button" id="menu-btn"
+          aria-label="Abrir navegação" aria-expanded="false" aria-controls="mobile-menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <a href="index.html" class="brand" aria-label="BB IA – início">
+          <span class="brand-symbol" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <path d="M24 3 42 15 24 27 6 15 24 3Z" stroke="currentColor" stroke-width="4" />
+              <path d="m24 21 18 12-18 12L6 33l18-12Z" stroke="currentColor" stroke-width="4" />
+            </svg>
+          </span>
+          <span class="brand-text">BB IA<small>EXPERIÊNCIA BB</small></span>
+        </a>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <nav class="primary-nav" aria-label="Navegação principal">
+          <a class="nav-link" href="index.html">Pra Você</a>
+          <a class="nav-link" href="index.html#how">Como funciona</a>
+          <a class="nav-link" href="index.html#chat">Atendimento digital</a>
+          <a class="nav-link" href="gerente.html">Área do gerente</a>
+        </nav>
+        <div class="header-actions">
+          <span class="header-chip">Protótipo acadêmico</span>
+          <button class="header-cta" id="logout-btn" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Sair
+          </button>
+        </div>
+      </div>
+      <nav class="mobile-menu" id="mobile-menu" aria-label="Navegação móvel">
+        <a href="index.html">Pra Você</a>
+        <a href="index.html#chat">Atendimento digital</a>
+        <a href="index.html#how">Como funciona</a>
+        <a href="gerente.html">Área do gerente</a>
+      </nav>
+    </header>
+    <div class="info-ribbon">
+      <div class="ribbon-inner">
+        <span><strong>◆</strong> MEU PERFIL / Limites e investimentos</span>
+        <span class="ribbon-side">Ambiente demonstrativo · Não vinculado a sistemas bancários reais</span>
+      </div>
+    </div>
+
+    <main class="perfil-main">
+      <!-- ── Greeting ── -->
+      <div class="perfil-header">
+        <div>
+          <span class="section-label">Painel do cliente</span>
+          <h2 id="greeting-name">Olá!</h2>
+          <p id="greeting-email" class="perfil-email"></p>
+        </div>
+        <a href="index.html#chat" class="button button-blue">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          Falar com o agente
+        </a>
+      </div>
+
+      <div class="perfil-grid">
+
+        <!-- ══ LIMITES ══ -->
+        <section class="surface perfil-card" aria-labelledby="limits-title">
+          <div class="card-head">
+            <div>
+              <span class="section-label">Configurações</span>
+              <h3 id="limits-title">Limites bancários</h3>
+            </div>
+            <span class="badge-info">Editar</span>
+          </div>
+
+          <!-- PIX limit -->
+          <div class="limit-row" id="pix-row">
+            <div class="limit-info">
+              <span class="limit-icon pix-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="m13 2-2 2.5h3L12 7"/><path d="M10 14c.8.8 1.8 1.3 3 1.3s2.2-.5 3-1.3"/><circle cx="12" cy="12" r="9"/>
+                </svg>
+              </span>
+              <div>
+                <strong>Limite PIX</strong>
+                <p>Por transação — editável livremente</p>
+              </div>
+            </div>
+            <div class="limit-value-wrap">
+              <span class="limit-value" id="pix-limit-display">R$ 1.000,00</span>
+              <button class="icon-button edit-btn" type="button" data-field="pix" aria-label="Editar limite PIX">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="limit-edit-form" id="pix-edit-form" hidden>
+            <label for="pix-input">Novo limite PIX (máx. R$ 50.000)</label>
+            <div class="edit-row">
+              <input id="pix-input" type="number" min="0" max="50000" step="50" placeholder="1000" />
+              <button type="button" class="button button-blue save-limit-btn" data-field="pix">Salvar</button>
+              <button type="button" class="button button-quiet cancel-limit-btn" data-field="pix">Cancelar</button>
+            </div>
+            <div class="field-error" id="pix-error"></div>
+          </div>
+
+          <div class="limit-divider"></div>
+
+          <!-- Credit card limit -->
+          <div class="limit-row" id="credit-row">
+            <div class="limit-info">
+              <span class="limit-icon card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+              </span>
+              <div>
+                <strong>Limite cartão de crédito</strong>
+                <p id="credit-limit-sub">Pode ser alterado <strong>uma vez</strong> pelo cliente</p>
+              </div>
+            </div>
+            <div class="limit-value-wrap">
+              <span class="limit-value" id="credit-limit-display">R$ 500,00</span>
+              <button class="icon-button edit-btn" type="button" id="credit-edit-btn"
+                data-field="credit" aria-label="Editar limite do cartão">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="limit-edit-form" id="credit-edit-form" hidden>
+            <label for="credit-input">Novo limite do cartão (máx. R$ 100.000)</label>
+            <div class="edit-row">
+              <input id="credit-input" type="number" min="0" max="100000" step="100" placeholder="500" />
+              <button type="button" class="button button-blue save-limit-btn" data-field="credit">Salvar</button>
+              <button type="button" class="button button-quiet cancel-limit-btn" data-field="credit">Cancelar</button>
+            </div>
+            <div class="field-error" id="credit-error"></div>
+          </div>
+
+          <!-- Locked credit state -->
+          <div class="limit-locked-notice" id="credit-locked-notice" hidden>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Limite já alterado. Para solicitar novo aumento, 
+            <a href="index.html#chat">fale com o agente</a>.
+          </div>
+        </section>
+
+        <!-- ══ INVESTIMENTOS ══ -->
+        <section class="surface perfil-card" aria-labelledby="invest-title">
+          <div class="card-head">
+            <div>
+              <span class="section-label">Carteira</span>
+              <h3 id="invest-title">Meus investimentos</h3>
+            </div>
+            <button class="button button-quiet btn-sm" type="button" id="new-invest-btn">
+              + Adicionar
+            </button>
+          </div>
+
+          <!-- Add investment form (hidden by default) -->
+          <div class="invest-add-form surface-inset" id="invest-add-form" hidden>
+            <h4>Novo investimento</h4>
+            <div class="field-group">
+              <label for="inv-name">Nome / descrição</label>
+              <input id="inv-name" type="text" placeholder="Ex: Tesouro Selic 2029" />
+            </div>
+            <div class="field-group">
+              <label for="inv-type">Tipo</label>
+              <select id="inv-type">
+                <option value="tesouro_selic">Tesouro Selic</option>
+                <option value="tesouro_ipca">Tesouro IPCA+</option>
+                <option value="cdb">CDB</option>
+                <option value="lci">LCI</option>
+                <option value="lca">LCA</option>
+                <option value="fundo_renda_fixa">Fundo Renda Fixa</option>
+                <option value="fundo_multimercado">Fundo Multimercado</option>
+                <option value="acoes">Ações</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="inv-balance">Saldo inicial (R$)</label>
+              <input id="inv-balance" type="number" min="0" step="1" placeholder="0,00" />
+            </div>
+            <div class="field-error" id="invest-add-error"></div>
+            <div class="invest-form-actions">
+              <button type="button" class="button button-blue btn-sm" id="invest-save-btn">Salvar investimento</button>
+              <button type="button" class="button button-quiet btn-sm" id="invest-cancel-btn">Cancelar</button>
+            </div>
+          </div>
+
+          <!-- Investment list -->
+          <div id="invest-list" class="invest-list">
+            <p class="invest-empty" id="invest-empty">
+              Você ainda não tem investimentos cadastrados.<br/>
+              Clique em <strong>Adicionar</strong> para começar.
+            </p>
+          </div>
+
+          <div class="invest-total-row">
+            <span>Total na carteira</span>
+            <strong id="invest-total">R$ 0,00</strong>
+          </div>
+        </section>
+
+      </div><!-- /perfil-grid -->
+
+      <!-- ── Agent tip ── -->
+      <div class="agent-tip surface">
+        <div class="tip-icon">✦</div>
+        <div>
+          <strong>Dica do agente</strong>
+          <p>
+            Quer adicionar saldo a um investimento? Basta falar com o 
+            <a href="index.html#chat">assistente BB IA</a> e dizer qual investimento e o valor — 
+            o agente registra o depósito automaticamente.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div><strong>BB IA · Experiência BB</strong> — conceito acadêmico de atendimento bancário com inteligência artificial.</div>
+      <div>Não é canal oficial do Banco do Brasil. Nenhuma operação bancária é realizada.</div>
+    </footer>
+    <div class="toast" role="status" aria-live="polite" id="toast"></div>
+    <script src="perfil.js"></script>
+  </body>
+</html>

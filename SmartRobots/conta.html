@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fbfa2b" />
+    <title>BB IA | Entrar / Criar conta</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="conta.css" />
+  </head>
+  <body>
+    <!-- ── HEADER ── -->
+    <header class="site-header">
+      <div class="header-inner">
+        <button class="hamburger" type="button" id="menu-btn"
+          aria-label="Abrir navegação" aria-expanded="false" aria-controls="mobile-menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <a href="index.html" class="brand" aria-label="BB IA – início">
+          <span class="brand-symbol" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <path d="M24 3 42 15 24 27 6 15 24 3Z" stroke="currentColor" stroke-width="4" />
+              <path d="m24 21 18 12-18 12L6 33l18-12Z" stroke="currentColor" stroke-width="4" />
+            </svg>
+          </span>
+          <span class="brand-text">BB IA<small>EXPERIÊNCIA BB</small></span>
+        </a>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <nav class="primary-nav" aria-label="Navegação principal">
+          <a class="nav-link" href="index.html">Pra Você</a>
+          <a class="nav-link" href="index.html#how">Como funciona</a>
+          <a class="nav-link" href="index.html#chat">Atendimento digital</a>
+          <a class="nav-link" href="gerente.html">Área do gerente</a>
+        </nav>
+        <div class="header-actions">
+          <span class="header-chip">Protótipo acadêmico</span>
+        </div>
+      </div>
+      <nav class="mobile-menu" id="mobile-menu" aria-label="Navegação móvel">
+        <a href="index.html">Pra Você</a>
+        <a href="index.html#chat">Atendimento digital</a>
+        <a href="index.html#how">Como funciona</a>
+        <a href="gerente.html">Área do gerente</a>
+      </nav>
+    </header>
+    <div class="info-ribbon">
+      <div class="ribbon-inner">
+        <span><strong>◆</strong> ACESSO / Conta do cliente</span>
+        <span class="ribbon-side">Ambiente demonstrativo · Não vinculado a sistemas bancários reais</span>
+      </div>
+    </div>
+
+    <main class="auth-main">
+      <div class="auth-card surface">
+        <!-- Logo mark -->
+        <div class="auth-logo">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 3 42 15 24 27 6 15 24 3Z" stroke="currentColor" stroke-width="4"/>
+            <path d="m24 21 18 12-18 12L6 33l18-12Z" stroke="currentColor" stroke-width="4"/>
+          </svg>
+        </div>
+
+        <!-- Tab switcher -->
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab active" id="tab-login" role="tab"
+            aria-selected="true" aria-controls="panel-login" type="button">
+            Entrar
+          </button>
+          <button class="auth-tab" id="tab-register" role="tab"
+            aria-selected="false" aria-controls="panel-register" type="button">
+            Criar conta
+          </button>
+        </div>
+
+        <!-- LOGIN PANEL -->
+        <div id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+          <h1 class="auth-title">Bem-vindo de volta</h1>
+          <p class="auth-sub">Acesse sua conta para gerenciar limites e investimentos.</p>
+          <form id="login-form" class="auth-form" novalidate>
+            <div class="field-group">
+              <label for="login-email">E-mail</label>
+              <input id="login-email" type="email" autocomplete="email"
+                placeholder="seu@email.com" required />
+            </div>
+            <div class="field-group">
+              <label for="login-password">Senha</label>
+              <div class="input-pw-wrap">
+                <input id="login-password" type="password" autocomplete="current-password"
+                  placeholder="••••••••" required />
+                <button type="button" class="pw-toggle" aria-label="Mostrar senha" data-target="login-password">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div id="login-error" class="auth-error" role="alert" aria-live="polite"></div>
+            <button type="submit" class="button button-blue auth-submit" id="login-btn">
+              Entrar na conta
+            </button>
+          </form>
+        </div>
+
+        <!-- REGISTER PANEL -->
+        <div id="panel-register" role="tabpanel" aria-labelledby="tab-register" hidden>
+          <h1 class="auth-title">Criar conta</h1>
+          <p class="auth-sub">Configure seus limites e acompanhe seus investimentos.</p>
+          <form id="register-form" class="auth-form" novalidate>
+            <div class="field-group">
+              <label for="reg-name">Nome completo</label>
+              <input id="reg-name" type="text" autocomplete="name"
+                placeholder="João da Silva" required />
+            </div>
+            <div class="field-group">
+              <label for="reg-email">E-mail</label>
+              <input id="reg-email" type="email" autocomplete="email"
+                placeholder="seu@email.com" required />
+            </div>
+            <div class="field-group">
+              <label for="reg-password">Senha <small>(mínimo 6 caracteres)</small></label>
+              <div class="input-pw-wrap">
+                <input id="reg-password" type="password" autocomplete="new-password"
+                  placeholder="••••••••" required minlength="6" />
+                <button type="button" class="pw-toggle" aria-label="Mostrar senha" data-target="reg-password">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="reg-confirm">Confirmar senha</label>
+              <div class="input-pw-wrap">
+                <input id="reg-confirm" type="password" autocomplete="new-password"
+                  placeholder="••••••••" required />
+                <button type="button" class="pw-toggle" aria-label="Mostrar senha" data-target="reg-confirm">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div id="register-error" class="auth-error" role="alert" aria-live="polite"></div>
+            <button type="submit" class="button button-blue auth-submit" id="register-btn">
+              Criar minha conta
+            </button>
+          </form>
+        </div>
+
+        <p class="auth-note">
+          Este protótipo não acessa dados bancários reais.
+          As informações são armazenadas localmente para fins demonstrativos.
+        </p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div><strong>BB IA · Experiência BB</strong> — conceito acadêmico de atendimento bancário com inteligência artificial.</div>
+      <div>Não é canal oficial do Banco do Brasil. Nenhuma operação bancária é realizada.</div>
+    </footer>
+    <div class="toast" role="status" aria-live="polite" id="toast"></div>
+    <script src="conta.js"></script>
+  </body>
+</html>

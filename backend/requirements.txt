@@ -1,0 +1,4 @@
+Django>=5.2,<5.3
+django-cors-headers>=4.9,<5
+ibm-watsonx-ai>=1.4,<2
+python-dotenv>=1,<2

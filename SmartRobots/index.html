@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fbfa2b" />
+    <title>BB IA | Agente de Atendimento Bancário Inteligente</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ── HEADER ── -->
+    <header class="site-header">
+      <div class="header-inner">
+        <button
+          class="hamburger"
+          type="button"
+          id="menu-btn"
+          aria-label="Abrir navegação"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <a
+          href="index.html"
+          class="brand"
+          aria-label="BB IA – início"
+        >
+          <span class="brand-symbol" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <path
+                d="M24 3 42 15 24 27 6 15 24 3Z"
+                stroke="currentColor"
+                stroke-width="4"
+              />
+              <path
+                d="m24 21 18 12-18 12L6 33l18-12Z"
+                stroke="currentColor"
+                stroke-width="4"
+              />
+            </svg>
+          </span>
+          <span class="brand-text">BB IA<small>EXPERIÊNCIA BB</small></span>
+        </a>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <nav class="primary-nav" aria-label="Navegação principal">
+          <a class="nav-link" href="index.html">Pra Você</a>
+          <a class="nav-link" href="#how">Como funciona</a>
+          <a class="nav-link" href="#chat">Atendimento digital</a>
+          <a class="nav-link" href="gerente.html">Área do gerente</a>
+        </nav>
+        <div class="header-actions">
+          <span class="header-chip">Protótipo acadêmico</span>
+          <a class="header-cta" id="header-profile-link" href="conta.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21c0-4.4 3.5-7 8-7s8 2.6 8 7" />
+            </svg>
+            <span id="header-profile-label">Entrar</span>
+          </a>
+        </div>
+      </div>
+      <nav class="mobile-menu" id="mobile-menu" aria-label="Navegação móvel">
+        <a href="index.html">Pra Você</a>
+        <a href="#chat">Atendimento digital</a>
+        <a href="#how">Como funciona</a>
+        <a href="gerente.html">Área do gerente</a>
+      </nav>
+    </header>
+    <div class="info-ribbon">
+      <div class="ribbon-inner">
+        <span
+          ><strong>◆</strong> ATENDIMENTO DIGITAL / Agente inteligente v2</span
+        ><span class="ribbon-side"
+          >Ambiente demonstrativo · Não vinculado a sistemas bancários
+          reais</span
+        >
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+     CUSTOMER VIEW
+═══════════════════════════════════════════ -->
+    <main id="customer-view">
+      <section class="hero" id="inicio" aria-label="Atendimento inteligente">
+        <div class="hero-content">
+          <span class="eyebrow"
+            >Atendimento bancário com inteligência artificial</span
+          >
+          <h1>Um atendimento que <em>entende você.</em></h1>
+          <p>
+            Conte o que precisa. Nosso agente orienta, resolve o que for
+            possível imediatamente e, quando necessário, organiza seu caso para
+            o gerente com um token de atendimento.
+          </p>
+          <div class="hero-buttons">
+            <a href="#chat" class="button button-primary">Iniciar atendimento →</a>
+            <a href="#how" class="button button-outline">Como funciona ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="feature-bar" aria-label="Benefícios">
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="m12 3 2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5Z"
+              /></svg
+          ></span>
+          <div>
+            <h3>Agente inteligente</h3>
+            <p>Conversa natural, entende intenções e faz perguntas certas.</p>
+          </div>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 8v5l3 2" />
+              <circle cx="12" cy="12" r="9" /></svg
+          ></span>
+          <div>
+            <h3>Resolução imediata</h3>
+            <p>Muitos problemas resolvidos sem precisar do gerente.</p>
+          </div>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 4h16v14H4z" />
+              <path d="M8 9h8M8 13h5" /></svg
+          ></span>
+          <div>
+            <h3>Caso já resumido</h3>
+            <p>O gerente recebe contexto completo, sem retrabalho.</p>
+          </div>
+        </article>
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2Z" />
+              <path d="M12 6v6l4 2" /></svg
+          ></span>
+          <div>
+            <h3>Token de atendimento</h3>
+            <p>Fila organizada e rastreável para o gerente gerir.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="main-content">
+        <section id="chat" aria-labelledby="chat-title">
+          <div class="section-top">
+            <div>
+              <span class="section-label">Experimente o atendimento</span>
+              <h2 id="chat-title">Como podemos ajudar hoje?</h2>
+              <p>
+                Descreva sua necessidade com suas próprias palavras ou escolha
+                um dos temas abaixo. Esta demonstração não acessa dados
+                bancários reais.
+              </p>
+            </div>
+            <span class="sim-pill">✦ Conversa simulada</span>
+          </div>
+          <div class="workspace">
+            <!-- CHAT PANEL -->
+            <section
+              class="surface chat-panel"
+              aria-label="Conversa com assistente virtual"
+            >
+              <div class="chat-head">
+                <div class="agent-brand">
+                  <span class="agent-avatar" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    >
+                      <rect x="4" y="6" width="16" height="14" rx="5" />
+                      <path
+                        d="M12 3v3M8 12h.01M16 12h.01M9 16c1.7 1.3 4.3 1.3 6 0"
+                      />
+                    </svg>
+                  </span>
+                  <span>
+                    <strong>Assistente BB IA</strong>
+                    <small
+                      ><span class="online-dot" aria-hidden="true"></span>
+                      Disponível para demonstração</small
+                    >
+                  </span>
+                </div>
+                <div class="head-actions">
+                  <button
+                    class="icon-button"
+                    type="button"
+                    id="reset-chat"
+                    aria-label="Reiniciar conversa"
+                    title="Reiniciar conversa"
+                  >
+                    <svg
+                      width="17"
+                      height="17"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    >
+                      <path d="M3 12a9 9 0 1 0 3-6.7M3 3v5h5" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="chat-progress">
+                <div class="chat-progress-fill" id="chat-progress"></div>
+              </div>
+              <div
+                class="chat-body"
+                id="chat-messages"
+                aria-live="polite"
+                aria-relevant="additions text"
+              ></div>
+              <form class="chat-footer" id="message-form">
+                <label for="message-input" class="sr-only"
+                  >Descreva sua necessidade</label
+                >
+                <div class="chat-input" id="chat-input-wrap">
+                  <input
+                    id="message-input"
+                    type="text"
+                    autocomplete="off"
+                    maxlength="280"
+                    placeholder="Digite sua mensagem..."
+                    aria-label="Sua mensagem"
+                  />
+                  <button
+                    class="send-button"
+                    type="submit"
+                    id="send-btn"
+                    aria-label="Enviar mensagem"
+                  >
+                    <svg
+                      width="17"
+                      height="17"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="m4 12 16-8-5 16-3-7-8-1ZM12 13l8-9" />
+                    </svg>
+                  </button>
+                </div>
+                <p class="chat-note">
+                  Por segurança, não informe CPF, senha, número de cartão ou
+                  outros dados pessoais.
+                </p>
+              </form>
+            </section>
+
+            <!-- SIDEBAR -->
+            <aside
+              class="sidebar"
+              id="sidebar"
+              aria-label="Etapas do atendimento"
+            >
+              <div class="surface side-card" id="journey-card">
+                <h3 class="side-title">Jornada de atendimento</h3>
+                <p class="side-intro">
+                  Acompanhe em tempo real o progresso do seu atendimento.
+                </p>
+                <div class="timeline" id="journey">
+                  <div class="timeline-item active" data-step="1">
+                    <span class="step-number">01</span>
+                    <div class="step-copy">
+                      <strong>Entendemos seu pedido</strong>
+                      <p>
+                        O agente identifica o assunto e coletainformações
+                        relevantes.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="timeline-item" data-step="2">
+                    <span class="step-number">02</span>
+                    <div class="step-copy">
+                      <strong>Tentamos resolver</strong>
+                      <p>
+                        Orientação imediata e verificação se o problema foi
+                        solucionado.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="timeline-item" data-step="3">
+                    <span class="step-number">03</span>
+                    <div class="step-copy">
+                      <strong>Gerente, se necessário</strong>
+                      <p>Token gerado com seu caso já resumido.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="token-card" id="token-card" role="status">
+                <div class="token-label">Token de atendimento gerado</div>
+                <div class="token-number" id="token-number">AT-0000</div>
+                <div id="token-priority-badge"></div>
+                <p style="margin-top: 8px">
+                  Seu caso foi adicionado à fila de atendimento. O gerente
+                  receberá o resumo completo da nossa conversa.
+                </p>
+                <div class="token-meta">
+                  <span id="token-position">Posição na fila: 1</span>
+                  <strong id="token-status">Aguardando</strong>
+                </div>
+                <a
+                  href="gerente.html"
+                  class="button button-blue"
+                  style="width: 100%; margin-top: 16px; display: flex"
+                >
+                  Ver painel do gerente →
+                </a>
+              </div>
+              <div class="notice-card" id="notice-card">
+                <div class="notice-top">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M12 2 3 6v6c0 5.5 3.4 8.7 9 10 5.6-1.3 9-4.5 9-10V6l-9-4Z"
+                    />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                  Atendimento responsável
+                </div>
+                <p>
+                  Este protótipo não consulta contas, movimenta dinheiro, aprova
+                  crédito ou registra reclamações reais. Casos sensíveis exigem
+                  canais oficiais e análise humana.
+                </p>
+              </div>
+              <div class="fraud-alert-card" id="fraud-alert-card" role="alert">
+                <div class="fraud-alert-top">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                    />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                  Alerta de segurança ativo
+                </div>
+                <p>
+                  Em caso de fraude confirmada, entre em contato com os canais
+                  oficiais:<br /><br />
+                  <a href="tel:40040001">4004-0001</a> (capitais)<br />
+                  <a href="tel:08007290001">0800-729-0001</a>
+                  (demais)<br /><br />
+                  Registre também um <strong>Boletim de Ocorrência</strong> para
+                  proteger seus direitos.
+                </p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="how-it-works" id="how" aria-labelledby="how-title">
+          <div class="section-top">
+            <div>
+              <span class="section-label">Uma experiência mais simples</span>
+              <h2 id="how-title">Do primeiro contato à solução.</h2>
+              <p>
+                O agente organiza o atendimento, e aciona o gerente somente
+                quando necessário — com tudo preparado.
+              </p>
+            </div>
+          </div>
+          <div class="how-grid">
+            <article class="how-item">
+              <span class="index">01</span>
+              <h3>Conte o que aconteceu</h3>
+              <p>
+                O agente entende diferentes formas de descrever um problema e
+                faz perguntas inteligentes para completar o contexto.
+              </p>
+            </article>
+            <article class="how-item">
+              <span class="index">02</span>
+              <h3>Receba uma solução imediata</h3>
+              <p>
+                Para a maioria dos casos, o agente oferece orientação clara e
+                resolve sem precisar de um gerente.
+              </p>
+            </article>
+            <article class="how-item">
+              <span class="index">03</span>
+              <h3>Token para o gerente, se necessário</h3>
+              <p>
+                Quando o caso precisa de análise humana, um token é gerado e o
+                gerente recebe o contexto completo da conversa.
+              </p>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <strong>BB IA · Experiência BB</strong> — conceito acadêmico de
+        atendimento bancário com inteligência artificial.
+      </div>
+      <div>
+        Não é canal oficial do Banco do Brasil. Nenhuma operação bancária é
+        realizada.
+      </div>
+    </footer>
+    <div class="toast" role="status" aria-live="polite" id="toast"></div>
+
+    <script src="main.js"></script>
+    <script>
+      // Update header profile link based on auth state
+      (function () {
+        const tok  = localStorage.getItem("bbIA_token");
+        const link  = document.getElementById("header-profile-link");
+        const label = document.getElementById("header-profile-label");
+        if (tok && link && label) {
+          const user = JSON.parse(localStorage.getItem("bbIA_user") || "{}");
+          link.href    = "perfil.html";
+          label.textContent = user.name ? user.name.split(" ")[0] : "Meu perfil";
+        }
+      })();
+    </script>
+  </body>
+</html>
