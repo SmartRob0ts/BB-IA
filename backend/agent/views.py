@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .auth_views import _require_auth
-from .models import Case, ChatSession
+from .models import Card, Case, ChatSession
 from . import watsonx_service
 
 logger = logging.getLogger(__name__)
@@ -69,6 +69,24 @@ def _parse_escalate(text):
     return before.strip(), data
 
 
+def _parse_card_action(text):
+    """Detecta <!--BLOCK_CARD:id--> ou <!--UNBLOCK_CARD:id--> na resposta do agente.
+    Retorna (text_sem_marcador, action, card_id) ou (text, None, None)."""
+    for action in ("BLOCK_CARD", "UNBLOCK_CARD"):
+        pattern = f"<!--{action}:"
+        idx = text.find(pattern)
+        if idx != -1:
+            end = text.find("-->", idx)
+            if end != -1:
+                raw_id = text[idx + len(pattern):end].strip()
+                clean = text[:idx] + text[end + 3:]
+                try:
+                    return clean.strip(), action, int(raw_id)
+                except ValueError:
+                    pass
+    return text, None, None
+
+
 def _manager(user):
     return user.is_manager
 
@@ -77,10 +95,11 @@ def _scope(user):
     return Case.objects.all() if _manager(user) else Case.objects.filter(user=user)
 
 
-def _create_case(user, data):
+def _create_case(user, data, history=None):
     # Identificador aleatório independente da ordem de gravação e do navegador.
     return Case.objects.create(token="AT-" + uuid.uuid4().hex[:16].upper(),
-                               owner=user.name, user=user, demo=True, **data)
+                               owner=user.name, user=user, demo=True,
+                               chat_history=history or [], **data)
 
 
 @csrf_exempt
@@ -119,7 +138,7 @@ def chat(request):
             if session.case_id:
                 case = session.case
             elif session.pending_case:
-                case = _create_case(user, _validate_case(session.pending_case))
+                case = _create_case(user, _validate_case(session.pending_case), session.history)
                 session.case = case
                 session.pending_case = None
                 session.save(update_fields=["case", "pending_case"])
@@ -134,8 +153,46 @@ def chat(request):
     if session.case_id:
         return JsonResponse({"reply": "Este atendimento já foi registrado. Inicie uma nova solicitação para outro assunto.",
                              "escalated": True, "case": session.case.to_dict()})
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}] + session.history[-20:] + [
-        {"role": "user", "content": message.strip()}]
+    # Build a client context block injected as the first user-turn so the agent
+    # always has the up-to-date profile, cards and investments.
+    profile = getattr(user, "profile", None)
+    cards   = list(Card.objects.filter(user=user))
+    from .models import Investment
+    investments = list(Investment.objects.filter(user=user))
+
+    ctx_lines = [f"## Dados do cliente autenticado: {user.name} ({user.email})"]
+    if profile:
+        ctx_lines.append(
+            f"- Limite PIX: R$ {float(profile.pix_limit):,.2f}"
+            f" | Limite cartão de crédito: R$ {float(profile.credit_limit):,.2f}"
+            + (" (limite já alterado pelo cliente)" if profile.credit_limit_changed else "")
+        )
+    if cards:
+        ctx_lines.append("### Cartões cadastrados:")
+        for c in cards:
+            status = "🔴 BLOQUEADO" if c.blocked else "🟢 Ativo"
+            ctx_lines.append(f"  - ID {c.pk} | {c.nickname} ({c.get_brand_display()} *{c.last4}) — {status}")
+    else:
+        ctx_lines.append("- Nenhum cartão cadastrado.")
+    if investments:
+        ctx_lines.append("### Investimentos:")
+        for inv in investments:
+            ctx_lines.append(f"  - ID {inv.pk} | {inv.name} ({inv.get_type_display()}) — Saldo: R$ {float(inv.balance):,.2f}")
+    else:
+        ctx_lines.append("- Nenhum investimento cadastrado.")
+    ctx_lines.append(
+        "\nVocê pode bloquear ou desbloquear cartões do cliente usando a ação `block_card` ou `unblock_card` "
+        "com o ID do cartão. Confirme sempre com o cliente antes de executar."
+    )
+    client_ctx = "\n".join(ctx_lines)
+
+    messages = (
+        [{"role": "system", "content": SYSTEM_PROMPT},
+         {"role": "user",   "content": client_ctx},
+         {"role": "assistant", "content": "Entendido. Tenho acesso aos dados do cliente e estou pronto para ajudar."}]
+        + session.history[-20:]
+        + [{"role": "user", "content": message.strip()}]
+    )
     try:
         raw = watsonx_service.reply(messages)
     except watsonx_service.ConfigurationError as exc:
@@ -144,6 +201,21 @@ def chat(request):
         logger.warning("Falha na chamada ao watsonx.ai")
         return JsonResponse({"error": "Não foi possível consultar o BB IA. Tente novamente em instantes."}, status=502)
     text, proposal = _parse_escalate(raw)
+
+    # Check if the agent requested a card block/unblock action
+    card_action_result = None
+    text, card_action, card_action_id = _parse_card_action(text)
+    if card_action and card_action_id:
+        try:
+            card = Card.objects.get(pk=card_action_id, user=user)
+            card.blocked = (card_action == "BLOCK_CARD")
+            card.save(update_fields=["blocked", "updated_at"])
+            state = "bloqueado" if card.blocked else "desbloqueado"
+            card_action_result = {"id": card.pk, "blocked": card.blocked, "nickname": card.nickname}
+            text = (text + f"\n\n✅ Cartão **{card.nickname}** (*{card.last4}) {state} com sucesso.").strip()
+        except Card.DoesNotExist:
+            text = (text + "\n\n⚠️ Não foi possível localizar o cartão para executar a ação.").strip()
+
     history = (session.history + [{"role": "user", "content": message.strip()},
                                  {"role": "assistant", "content": text}])[-20:]
     updated = ChatSession.objects.filter(pk=session.pk, revision=revision).update(
@@ -153,7 +225,8 @@ def chat(request):
     if proposal:
         text = "Preparei uma solicitação de simulação: " + proposal["description"] + "\n\nDeseja registrar e gerar o protocolo?"
     return JsonResponse({"reply": text, "escalated": False, "case": None,
-                         "pending_confirmation": proposal is not None, "proposal": proposal})
+                         "pending_confirmation": proposal is not None, "proposal": proposal,
+                         "card_action": card_action_result})
 
 
 @csrf_exempt

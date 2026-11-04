@@ -34,10 +34,9 @@
     searchQuery: "",
   };
 
-  // Highlight token passed from chat page via URL (e.g. gerente.html?token=AT-2044)
+  // Token passed from chat page via URL (e.g. gerente.html?token=AT-2044)
+  // Applied after fetchBackendCases() loads data, not here (cases is empty at init).
   const urlToken = new URLSearchParams(location.search).get("token");
-  if (urlToken && cases.find((c) => c.id === urlToken))
-    state.selectedCase = urlToken;
 
   async function patchBackendCase(token, patch) {
     try {
@@ -57,8 +56,12 @@
       if (!response.ok) throw new Error(data.error || "Falha ao carregar atendimentos.");
       cases = data.cases.map((c) => ({...c, ts: new Date(c.ts)}));
       canManage = data.can_manage === true;
-      if (!cases.some((c) => c.id === state.selectedCase)) state.selectedCase = cases[0]?.id || null;
-      if (urlToken && cases.some((c) => c.id === urlToken)) state.selectedCase = urlToken;
+      // Deep-link: if a token was passed in the URL and exists, select it; otherwise keep current or first.
+      if (urlToken && cases.some((c) => c.id === urlToken)) {
+        state.selectedCase = urlToken;
+      } else if (!cases.some((c) => c.id === state.selectedCase)) {
+        state.selectedCase = cases[0]?.id || null;
+      }
       renderManager();
     } catch (error) {
       cases = []; canManage = false; renderManager(); toast(error.message, "error");
@@ -225,6 +228,33 @@
     addField(parent, "Orientações fornecidas", c.actions);
     addField(parent, "Documentos possivelmente necessários", c.documents);
     addField(parent, "Motivo do encaminhamento", c.reason);
+
+    // Conversation history
+    if (c.chat_history && c.chat_history.length) {
+      const histField = document.createElement("div");
+      histField.className = "summary-field";
+      const histLb = document.createElement("label");
+      histLb.textContent = "Histórico da conversa com o agente";
+      histField.append(histLb);
+      const histBox = document.createElement("div");
+      histBox.style.cssText = "background:#f7f8fa;border:1px solid #e5e7eb;border-radius:6px;padding:10px 12px;max-height:320px;overflow-y:auto;font-size:12.5px;line-height:1.55;";
+      c.chat_history
+        .filter((m) => m.role !== "system")
+        .forEach((m) => {
+          const line = document.createElement("div");
+          line.style.cssText = "margin-bottom:8px;";
+          const who = document.createElement("strong");
+          who.style.cssText = "display:inline-block;min-width:72px;color:" + (m.role === "user" ? "#1a56db" : "#374151") + ";";
+          who.textContent = m.role === "user" ? "Cliente:" : "BB IA:";
+          const txt = document.createElement("span");
+          txt.style.cssText = "margin-left:6px;white-space:pre-wrap;color:#374151;";
+          txt.textContent = m.content;
+          line.append(who, txt);
+          histBox.append(line);
+        });
+      histField.append(histBox);
+      parent.append(histField);
+    }
 
     // Notes
     const noteField = document.createElement("div");

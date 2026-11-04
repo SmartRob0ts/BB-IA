@@ -92,13 +92,21 @@
     $("token-priority-badge").textContent = "Prioridade: " + ({high: "Alta", medium: "Normal", low: "Baixa"}[c.priority] || "Normal");
     $("token-position").textContent = "Atendimento de simulação";
     $("token-status").textContent = {waiting: "Aguardando", active: "Em atendimento", done: "Concluído"}[c.status] || c.status;
+    // Update manager link to deep-link directly to this case
+    const managerLink = $("token-card").querySelector("a");
+    if (managerLink) managerLink.href = "gerente.html?token=" + encodeURIComponent(c.id);
     stage(3);
   }
   async function send(raw) {
     const text = String(raw || "").trim();
     if (!text || busy) return;
     if (text === "Nova solicitação") return reset();
-    if (text === "Ver painel do gerente") { location.href = "gerente.html"; return; }
+    if (text === "Ver painel do gerente") {
+      const caseEl = $("token-number");
+      const tok = caseEl && caseEl.textContent && caseEl.textContent !== "AT-0000" ? caseEl.textContent : "";
+      location.href = "gerente.html" + (tok ? "?token=" + encodeURIComponent(tok) : "");
+      return;
+    }
     if (text.length > 4000) { toast("Use até 4000 caracteres por mensagem."); return; }
     $("message-input").value = "";
     addMsg("user", text);

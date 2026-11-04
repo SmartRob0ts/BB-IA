@@ -24,6 +24,10 @@ urlpatterns = [
     path("api/profile/",       auth_views.profile,   name="profile"),
 
     # ── Investimentos ─────────────────────────────────────────────────────────
-    path("api/investments/",          auth_views.investments_list,   name="investments-list"),
+    path("api/investments/",             auth_views.investments_list,   name="investments-list"),
     path("api/investments/<int:inv_id>/", auth_views.investment_detail, name="investment-detail"),
+
+    # ── Cartões ───────────────────────────────────────────────────────────────
+    path("api/cards/",              auth_views.cards_list,  name="cards-list"),
+    path("api/cards/<int:card_id>/", auth_views.card_detail, name="card-detail"),
 ]

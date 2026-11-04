@@ -110,6 +110,42 @@ class Investment(models.Model):
         }
 
 
+class Card(models.Model):
+    """Cartão bancário do cliente."""
+
+    BRAND_CHOICES = [
+        ("visa",       "Visa"),
+        ("mastercard", "Mastercard"),
+        ("elo",        "Elo"),
+        ("outro",      "Outro"),
+    ]
+
+    user      = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cards")
+    nickname  = models.CharField(max_length=60)
+    brand     = models.CharField(max_length=20, choices=BRAND_CHOICES, default="outro")
+    last4     = models.CharField(max_length=4)   # últimos 4 dígitos (exibição)
+    blocked   = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.nickname} ({self.user.email})"
+
+    def to_dict(self):
+        return {
+            "id":         self.pk,
+            "nickname":   self.nickname,
+            "brand":      self.brand,
+            "brand_label": self.get_brand_display(),
+            "last4":      self.last4,
+            "blocked":    self.blocked,
+            "created_at": self.created_at.isoformat(),
+        }
+
+
 class Case(models.Model):
     """Caso de atendimento gerado pelo agente de IA."""
 
@@ -138,6 +174,8 @@ class Case(models.Model):
     status      = models.CharField(max_length=10, choices=STATUS_CHOICES,   default="waiting")
     notes       = models.TextField(blank=True)
     demo        = models.BooleanField(default=False)
+    # Histórico completo da conversa do cliente com o agente
+    chat_history = models.JSONField(default=list, blank=True)
     created_at  = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -148,19 +186,20 @@ class Case(models.Model):
 
     def to_dict(self):
         return {
-            "id":          self.token,
-            "owner":       self.owner,
-            "intent":      self.intent,
-            "description": self.description,
-            "information": self.information,
-            "actions":     self.actions,
-            "documents":   self.documents,
-            "reason":      self.reason,
-            "priority":    self.priority,
-            "status":      self.status,
-            "notes":       self.notes,
-            "demo":        self.demo,
-            "ts":          self.created_at.isoformat(),
+            "id":           self.token,
+            "owner":        self.owner,
+            "intent":       self.intent,
+            "description":  self.description,
+            "information":  self.information,
+            "actions":      self.actions,
+            "documents":    self.documents,
+            "reason":       self.reason,
+            "priority":     self.priority,
+            "status":       self.status,
+            "notes":        self.notes,
+            "demo":         self.demo,
+            "chat_history": self.chat_history,
+            "ts":           self.created_at.isoformat(),
         }
 
 

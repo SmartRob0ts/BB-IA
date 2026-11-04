@@ -33,13 +33,27 @@ MIDDLEWARE = [
 ]
 
 # ─── CORS (aceita o front-end em qualquer origem durante o desenvolvimento) ───
-CORS_ALLOWED_ORIGINS = os.environ.get("DJANGO_CORS_ORIGINS", "http://localhost:5500,http://127.0.0.1:5500").split(",")
+_cors_origins_env = os.environ.get("DJANGO_CORS_ORIGINS", "")
+if _cors_origins_env:
+    CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_origins_env.split(",") if o.strip()]
+else:
+    # Em desenvolvimento sem variável definida, permite qualquer origem.
+    CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_HEADERS = [
     "accept",
     "authorization",
     "content-type",
     "origin",
     "x-requested-with",
+]
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
 ]
 
 # ─── URLs ─────────────────────────────────────────────────────────────────────

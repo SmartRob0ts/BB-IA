@@ -54,7 +54,7 @@
     </header>
     <div class="info-ribbon">
       <div class="ribbon-inner">
-        <span><strong>◆</strong> MEU PERFIL / Limites e investimentos</span>
+        <span><strong>◆</strong> MEU PERFIL / Limites, cartões e investimentos</span>
         <span class="ribbon-side">Ambiente demonstrativo · Não vinculado a sistemas bancários reais</span>
       </div>
     </div>
@@ -223,6 +223,54 @@
           <div class="invest-total-row">
             <span>Total na carteira</span>
             <strong id="invest-total">R$ 0,00</strong>
+          </div>
+        </section>
+
+        <!-- ══ CARTÕES ══ -->
+        <section class="surface perfil-card" aria-labelledby="cards-title">
+          <div class="card-head">
+            <div>
+              <span class="section-label">Minha carteira</span>
+              <h3 id="cards-title">Cartões cadastrados</h3>
+            </div>
+            <button class="button button-quiet btn-sm" type="button" id="new-card-btn">
+              + Adicionar cartão
+            </button>
+          </div>
+
+          <!-- Add card form (hidden by default) -->
+          <div class="invest-add-form surface-inset" id="card-add-form" hidden>
+            <h4>Novo cartão</h4>
+            <div class="field-group">
+              <label for="card-nickname">Apelido (ex: Cartão Principal)</label>
+              <input id="card-nickname" type="text" placeholder="Ex: Cartão Principal" maxlength="60" />
+            </div>
+            <div class="field-group">
+              <label for="card-brand">Bandeira</label>
+              <select id="card-brand">
+                <option value="visa">Visa</option>
+                <option value="mastercard">Mastercard</option>
+                <option value="elo">Elo</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="card-last4">Últimos 4 dígitos</label>
+              <input id="card-last4" type="text" maxlength="4" placeholder="1234" inputmode="numeric" />
+            </div>
+            <div class="field-error" id="card-add-error"></div>
+            <div class="invest-form-actions">
+              <button type="button" class="button button-blue btn-sm" id="card-save-btn">Salvar cartão</button>
+              <button type="button" class="button button-quiet btn-sm" id="card-cancel-btn">Cancelar</button>
+            </div>
+          </div>
+
+          <!-- Card list -->
+          <div id="card-list" class="invest-list">
+            <p class="invest-empty" id="card-empty">
+              Você ainda não tem cartões cadastrados.<br />
+              Clique em <strong>Adicionar cartão</strong> para começar.
+            </p>
           </div>
         </section>
 

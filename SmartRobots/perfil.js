@@ -67,6 +67,7 @@
   ══════════════════════════════════════════════════════════════════════════ */
   let _profile = null;     // { pix_limit, credit_limit, credit_limit_changed }
   let _investments = [];   // array de investment objects
+  let _cards = [];         // array de card objects
 
   /* ══════════════════════════════════════════════════════════════════════════
      BOOT — fetch user + profile + investments
@@ -101,6 +102,14 @@
     if (invRes.ok) {
       _investments = invRes.data.investments || [];
       renderInvestments();
+    }
+
+    // Fetch cards
+    const cardsRes = await apiFetch("/api/cards/");
+    if (!cardsRes) return;
+    if (cardsRes.ok) {
+      _cards = cardsRes.data.cards || [];
+      renderCards();
     }
   }
 
@@ -346,6 +355,156 @@
       toast("Erro ao remover.", "error");
     }
   }
+
+  /* ══════════════════════════════════════════════════════════════════════════
+     CARDS
+  ══════════════════════════════════════════════════════════════════════════ */
+  function renderCards() {
+    const list  = $("card-list");
+    const empty = $("card-empty");
+    Array.from(list.children).filter((c) => c !== empty).forEach((c) => c.remove());
+
+    if (!_cards.length) {
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+
+    for (const card of _cards) {
+      const item = document.createElement("div");
+      item.className = "invest-item";
+      item.dataset.id = card.id;
+
+      const left = document.createElement("div");
+      left.className = "invest-item-left";
+
+      const badge = document.createElement("span");
+      badge.className = "invest-type-badge" + (card.blocked ? " card-blocked-badge" : "");
+      badge.textContent = card.brand_label;
+
+      const name = document.createElement("span");
+      name.className = "invest-name";
+      name.textContent = card.nickname + " *" + card.last4;
+
+      const statusTag = document.createElement("span");
+      statusTag.className = "invest-pending";
+      statusTag.style.cssText = card.blocked
+        ? "background:#fee2e2;color:#b91c1c;border-color:#fca5a5;"
+        : "background:#dcfce7;color:#166534;border-color:#86efac;";
+      statusTag.textContent = card.blocked ? "🔴 Bloqueado" : "🟢 Ativo";
+
+      left.append(badge, name, statusTag);
+
+      const actions = document.createElement("div");
+      actions.className = "invest-actions";
+      actions.style.cssText = "display:flex;gap:6px;";
+
+      // Block / unblock toggle
+      const blockBtn = document.createElement("button");
+      blockBtn.type = "button";
+      blockBtn.className = "button btn-sm " + (card.blocked ? "button-blue" : "button-quiet");
+      blockBtn.style.cssText = "font-size:11.5px;padding:3px 10px;";
+      blockBtn.textContent = card.blocked ? "Desbloquear" : "Bloquear";
+      blockBtn.addEventListener("click", () => toggleCardBlock(card));
+
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "invest-del-btn";
+      delBtn.setAttribute("aria-label", "Remover " + card.nickname);
+      delBtn.title = "Remover cartão";
+      delBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>`;
+      delBtn.addEventListener("click", () => deleteCard(card.id));
+
+      actions.append(blockBtn, delBtn);
+      item.append(left, actions);
+      list.insertBefore(item, empty);
+    }
+  }
+
+  async function toggleCardBlock(card) {
+    const action = card.blocked ? "desbloquear" : "bloquear";
+    if (!confirm(`Deseja ${action} o cartão "${card.nickname}" (*${card.last4})?`)) return;
+    try {
+      const res = await apiFetch("/api/cards/" + card.id + "/", {
+        method: "PATCH",
+        body: JSON.stringify({ blocked: !card.blocked }),
+      });
+      if (!res) return;
+      if (res.ok) {
+        const updated = res.data.card;
+        _cards = _cards.map((c) => (c.id === updated.id ? updated : c));
+        renderCards();
+        toast(`Cartão ${updated.blocked ? "bloqueado" : "desbloqueado"} com sucesso!`, "success");
+      } else {
+        toast(res.data.error || "Erro ao atualizar cartão.", "error");
+      }
+    } catch { toast("Erro de conexão com o servidor.", "error"); }
+  }
+
+  async function deleteCard(id) {
+    if (!confirm("Remover este cartão da conta?")) return;
+    try {
+      const res = await apiFetch("/api/cards/" + id + "/", { method: "DELETE" });
+      if (!res) return;
+      if (res.ok) {
+        _cards = _cards.filter((c) => c.id !== id);
+        renderCards();
+        toast("Cartão removido.");
+      } else {
+        toast("Erro ao remover.", "error");
+      }
+    } catch { toast("Erro de conexão com o servidor.", "error"); }
+  }
+
+  // ── New card form ─────────────────────────────────────────────────────────
+  $("new-card-btn").addEventListener("click", () => {
+    const form = $("card-add-form");
+    form.hidden = !form.hidden;
+    if (!form.hidden) {
+      $("card-nickname").value = "";
+      $("card-last4").value    = "";
+      $("card-add-error").textContent = "";
+      $("card-nickname").focus();
+    }
+  });
+
+  $("card-cancel-btn").addEventListener("click", () => {
+    $("card-add-form").hidden = true;
+  });
+
+  $("card-save-btn").addEventListener("click", async () => {
+    const nickname = $("card-nickname").value.trim();
+    const brand    = $("card-brand").value;
+    const last4    = $("card-last4").value.trim();
+    const errEl    = $("card-add-error");
+    errEl.textContent = "";
+
+    if (!nickname) { errEl.textContent = "Informe o apelido do cartão."; return; }
+    if (!/^\d{4}$/.test(last4)) { errEl.textContent = "Informe exatamente 4 dígitos numéricos."; return; }
+
+    const btn = $("card-save-btn");
+    btn.disabled = true;
+    btn.textContent = "Salvando…";
+    try {
+      const res = await apiFetch("/api/cards/", {
+        method: "POST",
+        body: JSON.stringify({ nickname, brand, last4 }),
+      });
+      if (!res) return;
+      if (!res.ok) { errEl.textContent = res.data.error || "Erro ao salvar."; return; }
+      _cards.push(res.data.card);
+      renderCards();
+      $("card-add-form").hidden = true;
+      toast("Cartão adicionado com sucesso!", "success");
+    } catch (err) {
+      errEl.textContent = "Erro de conexão com o servidor. Verifique se o backend está em execução.";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Salvar cartão";
+    }
+  });
 
   /* ── Boot ────────────────────────────────────────────────────────────────── */
   boot();

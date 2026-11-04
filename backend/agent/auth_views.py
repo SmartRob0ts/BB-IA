@@ -26,7 +26,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from .models import AuthToken, FinancialProfile, Investment, User
+from .models import AuthToken, Card, FinancialProfile, Investment, User
 
 # ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -344,3 +344,93 @@ def investment_detail(request, inv_id: int):
 
     inv.save()
     return JsonResponse({"investment": inv.to_dict()})
+
+
+# ─── Cards ────────────────────────────────────────────────────────────────────
+@csrf_exempt
+@require_http_methods(["GET", "POST", "OPTIONS"])
+def cards_list(request):
+    """GET: lista cartões do cliente. POST: adiciona novo cartão."""
+    if request.method == "OPTIONS":
+        return _cors_ok()
+
+    user, err = _require_auth(request)
+    if err:
+        return err
+
+    if request.method == "GET":
+        qs = Card.objects.filter(user=user)
+        return JsonResponse({"cards": [c.to_dict() for c in qs]})
+
+    # POST — adiciona novo cartão
+    body, err = _json_body(request)
+    if err:
+        return err
+
+    nickname = (body.get("nickname") or "").strip()
+    if not nickname:
+        return JsonResponse({"error": "Apelido do cartão é obrigatório."}, status=400)
+    if len(nickname) > 60:
+        return JsonResponse({"error": "Apelido deve ter no máximo 60 caracteres."}, status=400)
+
+    last4 = str(body.get("last4") or "").strip()
+    if not last4.isdigit() or len(last4) != 4:
+        return JsonResponse({"error": "Informe os últimos 4 dígitos do cartão."}, status=400)
+
+    valid_brands = {c[0] for c in Card.BRAND_CHOICES}
+    brand = body.get("brand", "outro")
+    if brand not in valid_brands:
+        brand = "outro"
+
+    if Card.objects.filter(user=user).count() >= 10:
+        return JsonResponse({"error": "Limite de 10 cartões por conta atingido."}, status=400)
+
+    card = Card.objects.create(user=user, nickname=nickname, brand=brand, last4=last4)
+    return JsonResponse({"card": card.to_dict()}, status=201)
+
+
+@csrf_exempt
+@require_http_methods(["GET", "PATCH", "DELETE", "OPTIONS"])
+def card_detail(request, card_id: int):
+    """GET: detalhes. PATCH: bloquear/desbloquear. DELETE: remover."""
+    if request.method == "OPTIONS":
+        return _cors_ok()
+
+    user, err = _require_auth(request)
+    if err:
+        return err
+
+    try:
+        card = Card.objects.get(pk=card_id, user=user)
+    except Card.DoesNotExist:
+        return JsonResponse({"error": "Cartão não encontrado."}, status=404)
+
+    if request.method == "GET":
+        return JsonResponse({"card": card.to_dict()})
+
+    if request.method == "DELETE":
+        card.delete()
+        return JsonResponse({"ok": True})
+
+    # PATCH — permite apenas alteração do campo blocked (e nickname)
+    body, err = _json_body(request)
+    if err:
+        return err
+
+    allowed = {"blocked", "nickname"}
+    if set(body) - allowed:
+        return JsonResponse({"error": "Campos inválidos. Permitido: blocked, nickname."}, status=400)
+
+    if "blocked" in body:
+        if not isinstance(body["blocked"], bool):
+            return JsonResponse({"error": "blocked deve ser true ou false."}, status=400)
+        card.blocked = body["blocked"]
+
+    if "nickname" in body:
+        nickname = (body["nickname"] or "").strip()
+        if not nickname or len(nickname) > 60:
+            return JsonResponse({"error": "Apelido inválido."}, status=400)
+        card.nickname = nickname
+
+    card.save()
+    return JsonResponse({"card": card.to_dict()})

@@ -215,6 +215,11 @@
   margin-bottom: 24px;
 }
 
+/* Cartão de cartões ocupa a linha inteira quando existem 3 seções */
+.perfil-grid > section:last-child:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
 @media (max-width: 740px) {
   .perfil-grid { grid-template-columns: 1fr; }
 }
@@ -455,6 +460,9 @@
   color: #b07d00;
   font-weight: 600;
   margin-left: 4px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  border: 1px solid transparent;
 }
 
 .invest-actions {
